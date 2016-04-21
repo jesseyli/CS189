@@ -24,30 +24,38 @@ def montage_images(images):
 
 class neural_net(object):
     def __init__(self, inputLayerSize = 784, hiddenLayerSize = 200, outputLayerSize = 10):
-        self.inputLayerSize = inputLayerSize + 1 # add bias
+        self.inputLayerSize = inputLayerSize
         self.outputLayerSize = outputLayerSize
-        self.hiddenLayerSize = hiddenLayerSize + 1 # add bias
+        self.hiddenLayerSize = hiddenLayerSize 
 
-def trainNeuralNetwork(images,labels):
-    pass
-    # initialize all weights, V,W at random
-    # while (stopping criteria):
-    #   pick one data point at random from training set
-    #   perform forward pass (compute values for gradient descent update)
-    #   perform backward pass 
-    #   perform stochastic gradient update
-    # return V,W
+    def trainNeuralNetwork(self,images,labels):
+        images = np.vstack((images, np.ones((1,images.shape[1]))))
+        V = np.random.randn(self.hiddenLayerSize, self.inputLayerSize + 1)
+        W = np.random.randn(self.outputLayerSize, self.hiddenLayerSize + 1)
+        pass
+        # initialize all weights, V,W at random
+        # while (stopping criteria):
+        #   pick one data point at random from training set
+        #   perform forward pass (compute values for gradient descent update)
+        #   perform backward pass 
+        #   perform stochastic gradient update
+        return V,W
 
-def predictNeuralNetwork(weights, images):
-    # compute labels of all images using the weights
-    # return labels
-    pass
+    def tanh(self, z):
+        return np.tanh(z)
 
-def sigmoid(z):
-    return 1/(1+np.exp(-z))
+    def predictNeuralNetwork(self,weights, images):
+        images = np.vstack((images, np.ones((1,images.shape[1]))))
+        h = self.tanh(np.dot(weights[0], images))
+        h = np.vstack((h, np.ones((1,h.shape[1]))))
+        z = self.sigmoid(np.dot(weights[1], h))
+        return z
+        # compute labels of all images using the weights
+        # return labels
 
-def tanh(z):
-    return np.tanh(z)
+    def sigmoid(self,z):
+        return 1/(1+np.exp(-z))
+
 
 train = scipy.io.loadmat("dataset/train.mat")
 train_data = train["train_images"]
@@ -66,8 +74,14 @@ def squaredError(predictions, vec_labels):
     return np.sum((predictions-vec_labels)**2)/2
 
 def crossEntropyError(predictions, vec_labels):
-    return -np.sum(np.multiply(vec_labels,np.log(predictions)) + 
+    # a = np.log(predictions)
+    # b = np.log(1 - predictions)
+    error = -np.sum(np.multiply(vec_labels,np.log(predictions)) + 
             np.multiply((1 - vec_labels), np.log(1 - predictions)))
+    if np.isnan(error):
+        print('Taking log of zero...')
+    return error
+
 # # Show images
 # img = montage_images(train_data.reshape(28,28,60000))
 # plt.imshow(img)
@@ -75,3 +89,8 @@ def crossEntropyError(predictions, vec_labels):
 
 test = scipy.io.loadmat("dataset/test.mat")
 test_data = test["test_images"]
+test_data = test_data.reshape(test_data.shape[0], -1).T
+# # Show images
+# img = montage_images(test_data.reshape(28,28,10000))
+# plt.imshow(img)
+# plt.show()
