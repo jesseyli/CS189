@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 import pickle
 import pdb
+import sklearn.preprocessing
 
 
 def benchmark(pred_labels, true_labels):
@@ -25,12 +26,13 @@ def montage_images(images):
     return img
 
 class neural_net(object):
-    def __init__(self, inputLayerSize = 784, hiddenLayerSize = 200, outputLayerSize = 10, error_limit = 1e-5, lamb = 1e-2):
+    def __init__(self, inputLayerSize = 784, hiddenLayerSize = 200, outputLayerSize = 10, error_limit = 1e-5, lamb = 1e-2, decay = 1):
         self.inputLayerSize = inputLayerSize
         self.outputLayerSize = outputLayerSize
         self.hiddenLayerSize = hiddenLayerSize
         self.error_limit = error_limit
         self.lamb = lamb
+        self.decay = decay
 
     def squaredErrorTrain(self,images,vec_labels):
         # images = np.vstack((images, np.ones((1,images.shape[1]))))
@@ -59,20 +61,20 @@ class neural_net(object):
 
             iteration += 1
             if iteration % 50000 == 0:
-                self.lamb = self.lamb*0.9
+                self.lamb = self.lamb*self.decay
                 # Check gradients
-                img = images[sample].reshape((1,784))
-                eta = 1e-6
+                # img = images[sample].reshape((1,784))
+                # eta = 1e-6
                 # check_dW = (self.squaredError(self.predict((V,W+eta),img),vec_labels[sample]) 
                 #             - self.squaredError(self.predict((V,W-eta),img),vec_labels[sample]))/(2*eta)
                 # print('dW')
                 # print(np.sum(dW))
                 # print(check_dW)
-                check_dV = (self.squaredError(self.predict((V+eta,W),img),vec_labels[sample]) 
-                            - self.squaredError(self.predict((V-eta,W),img),vec_labels[sample]))/(2*eta)
-                print('dV')
-                print(np.sum(dV))
-                print(check_dV)
+                # check_dV = (self.squaredError(self.predict((V+eta,W),img),vec_labels[sample]) 
+                #             - self.squaredError(self.predict((V-eta,W),img),vec_labels[sample]))/(2*eta)
+                # print('dV')
+                # print(np.sum(dV))
+                # print(check_dV)
                 # pdb.set_trace()
                 yield V,W
         # initialize all weights, V,W at random
@@ -117,16 +119,19 @@ class neural_net(object):
         return error
 
 train = scipy.io.loadmat("dataset/train.mat")
-train_images = train["train_images"]
+train_images= train["train_images"]
 train_labels= train["train_labels"]
-train_images = train_images.reshape(-1, train_images.shape[-1])
+train_images = np.float64(train_images.reshape(-1, train_images.shape[-1]))
+train_images = sklearn.preprocessing.normalize(train_images,axis=0)
 train_data = np.hstack((train_images.T, train_labels))
-
 np.random.shuffle(train_data)
 train_images = train_data[:50000,:-1]
 train_labels = train_data[:50000,-1]
 valid_images = train_data[50000:,:-1]
 valid_labels = train_data[50000:,-1]
+
+
+
 
 def vectorize_labels(labels):
     new_label = np.zeros((labels.shape[0],10))
@@ -144,6 +149,7 @@ while error > 0.03:
     pred = net.predict((V,W),valid_images)
     error = benchmark(np.argmax(pred, axis=1),valid_labels)[0]
     print(error)
+
 # Show images
 # img = montage_images(train_images.T.reshape(28,28,50000))
 # plt.imshow(img)
@@ -151,7 +157,8 @@ while error > 0.03:
 
 test = scipy.io.loadmat("dataset/test.mat")
 test_images = test["test_images"]
-test_images = test_images.reshape(test_images.shape[0], -1)
+test_images = np.float64(test_images.reshape(test_images.shape[0], -1))
+test_images = sklearn.preprocessing.normalize(test_images,axis=0)
 
 pred = np.argmax(net.predict((V,W),test_images), axis=1)
 
@@ -159,14 +166,11 @@ numbers = np.arange(len(pred)) + 1
 test_predict = np.vstack((numbers,pred))
 np.savetxt("digits.csv", test_predict.transpose(), delimiter=",",fmt = '%u')
 
-
-
 # # Show images
 # img = montage_images(test_images.T.reshape(28,28,10000))
 # plt.imshow(img)
 # plt.show()
 
-# cpickle, learning rate decreases with each iteration, gradient checking with eps = 1e-5
+# cpickle
 # examine either the magnitude of the gradient or the current cost on the whole training set every some fixed amount of iterations.
 # cross validation, 10 fold?
-# data preprocessing?
