@@ -1,0 +1,624 @@
+\documentclass[11pt]{exam}
+\noprintanswers
+\usepackage{amsmath,amssymb,amsthm,bm,hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin=1in]{geometry}
+\newtheoremstyle{quest}{\topsep}{\topsep}{}{}{\bfseries}{}{ }{\thmname{#1}\thmnote{ #3}.}
+\theoremstyle{quest}
+\newtheorem*{definition}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{question}{Problem}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{challengeproblem}{Challenge Problem}
+
+\newcommand{\name}{CS 189: Introduction to Machine Learning}
+\newcommand{\hw}{2}
+\newcommand{\duedate}{February 18, 2016 at 11:59pm}
+
+\title{
+\Large \name
+\\\vspace{10pt}
+\Large Homework \hw
+\\\vspace{10pt}
+\large Due: \duedate}
+\date{}
+\author{}
+
+\markright{\name\hfill Homework \hw\hfill}
+
+%% If you want to define a new command, you can do it like this:
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+
+%% If you want to use a function like ''sin'' or ''cos'', you can do it like this
+%% (we probably won't have much use for this)
+% \DeclareMathOperator{\sin}{sin}   %% just an example (it's already defined)
+
+\begin{document}
+\maketitle
+
+\begin{picture}(0,0)
+\put(0,180){\textbf{Name: Jesse Li} \hspace{6cm} \textbf{Student ID: 23822462}}
+\end{picture}
+\vspace{-1.25in}
+
+% =============================================================
+% Instructions:
+\section*{Instructions}
+\begin{itemize}
+\item Homework 2 is completely a written assignment; no coding involved.
+\item We prefer that you typeset your answers using the \LaTeX{} template on
+  bCourses. If there is not enough space for your answer, you may continue your
+  answer on the next page. Make sure to start each question on a new page.
+\item Neatly handwritten and scanned solutions will also be accepted. Make sure your answers are readable!
+\item Submit a PDF with your answers to the Homework 2 assignment on
+  Gradescope. You should be able to see CS 189/289A on Gradescope when you log
+  in with your bCourses email address. Please make a Piazza post if you have
+  any problems accessing Gradescope.
+\item While submitting to Gradescope, you will have to select the pages
+  containing your answer for each question.
+\item The assignment covers concepts in probability, linear algebra, matrix calculus, and decision theory.
+\item \textbf{Start early. This is a long assignment. Some of the material may not have been covered in lecture;
+you are responsible for finding resources to understand it.}
+\end{itemize}
+
+\newpage
+
+% =============================================================
+
+\begin{question}[1: Expected Value]
+~
+
+A target is made of 3 concentric circles of radii $1/{\sqrt{3}}$, $1$ and
+$\sqrt{3}$ feet. Shots within the inner circle are given 4 points, shots within
+the next ring are given 3 points, and shots within the third ring are given 2
+points. Shots outside the target are given 0 points.
+
+Let $X$ be the distance of the hit from the center (in feet), and let the probability density function
+of $X$ be
+\[
+f(x) =
+  \begin{cases}
+   \frac{2}{\pi (1+x^2)} & x>0 \\
+   0 &  \text{otherwise}
+  \end{cases}
+\]
+What is the expected value of the score of a single shot?
+\end{question}
+\textbf{Solution:}
+
+Expected value = $4\int_{0}^{frac{1}{\sqrt{3}}}\frac{2}{\pi(1+x^2)}dx +  3\int_{1/\sqrt{3}}^{1}\frac{2}{\pi(1+x^2)}dx + 2\int_{1}^{\sqrt{3}}\frac{2}{\pi(1+x^2)}dx$
+
+= $4(\frac{2tan^{-1}(\frac{1}{\sqrt{3}})}{\pi} - \frac{2tan^{-1}(0)}{\pi}) + 3(\frac{2tan^{-1}(1)}{\pi} - \frac{2tan^{-1}(\frac{1}{\sqrt{3}})}{\pi}) + 2(\frac{2tan^{-1}(\sqrt{3})}{\pi} - \frac{2tan^{-1}(1)}{\pi})$ 
+
+= $\frac{4}{3} + \frac{1}{2} + \frac{1}{3}$
+
+= $\frac{13}{6}$
+
+\newpage
+
+% =============================================================
+
+\begin{question}[2: MLE]
+~
+
+Assume that the random variable $X$ has the exponential distribution
+\[
+f(x;\theta) = \theta e^{-\theta x} \ \ \ \ \ \ \ \ x \geq 0, \theta > 0
+\]
+where $\theta$ is the parameter of the distribution. Use the method of maximum
+likelihood to estimate $\theta$ if 5 observations of $X$ are $x_1 = 0.9$, $x_2 =
+1.7$, $x_3 = 0.4$, $x_4 = 0.3$, and $x_5 = 2.6$, generated i.i.d. (i.e.,
+independent and identically distributed).
+\end{question}
+\textbf{Solution:}
+
+The observations are independent, so the likelihood function, $L$, is given by:
+
+$L = \prod_{i=1}^{n} \theta e^{-\theta x_i} = \theta^n \exp(-\theta \sum_{i=1}^{n} x_i)$
+
+From lecture we know that maximizing the log-likelihood function is equivalent to maximizing the likelihood function, so we can set the derivative of the log-likelihood function to 0 to find the maximum log-likelihood.
+
+$\frac{d}{d\theta}(\ln(\theta^n \exp(-\theta \sum_{i=1}^{n} x_i))) = 0$
+
+$\frac{d}{d\theta}(n \ln(\theta) + (-\theta \sum_{i=1}^{n} x_i)) = 0$
+
+$\frac{n}{\theta} - \sum_{i=1}^{n} x_i = 0$
+
+$\theta = n/\sum_{i=1}^{n} x_i = 5/(0.9 + 1.7 + 0.4  + 0.3 + 2.6)$
+
+$= 0.84746$
+
+
+\newpage
+
+% =============================================================
+
+\begin{definition}
+Let $A \in \mathbb{R}^{n \times n}$ be a symmetric matrix. We say that $A$ is
+\textbf{positive definite} if $\forall x\in \mathbb{R}^n \mid x \neq \vec{0},\ x^\top Ax >
+0$. Similarly, we say that $A$ is \textbf{positive semidefinite} if $\forall x
+\in \mathbb{R}^n,\ x^\top Ax \geq 0$.
+\end{definition}
+
+\bigskip
+
+\begin{question}[3: Positive Definiteness]
+~
+
+Let $x = \begin{bmatrix}x_1 & \cdots & x_n\end{bmatrix}^\top \in \mathbb{R}^n$,
+and let $A \in \mathbb{R}^{n \times n}$ be the square matrix
+\begin{equation*}
+A = \begin{bmatrix}
+  a_{11} & a_{12} & \cdots & a_{1n} \\
+  a_{21} & a_{22} & \cdots & a_{2n} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  a_{n1} & a_{n2} & \cdots & a_{nn}
+\end{bmatrix}
+\end{equation*}
+
+\begin{itemize}
+\item[(a)] Give an explicit formula for $x^\top A x$. Write your answer as a sum
+  involving the elements of $A$ and $x$.
+\item[(b)] Show that if $A$ is positive definite, then the entries on the
+  diagonal of $A$ are positive (that is, $a_{ii} > 0$ for all
+  $1 \leq i \leq n$).
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+\begin{itemize}
+\item[(a)]
+\begin{equation*}
+x^\top A x = \begin{bmatrix}
+  x_{1} & x_{2} & \cdots & x_{n} \\
+\end{bmatrix}
+\*
+\begin{bmatrix}
+  a_{11} & a_{12} & \cdots & a_{1n} \\
+  a_{21} & a_{22} & \cdots & a_{2n} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  a_{n1} & a_{n2} & \cdots & a_{nn}
+\end{bmatrix}
+\*
+\begin{bmatrix}
+  x_{1} \\
+  x_{2} \\
+  \vdots \\
+  x_{n}
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+= \begin{bmatrix}
+  x_{1} & x_{2} & \cdots & x_{n} \\
+\end{bmatrix}
+\*
+\begin{bmatrix}
+  x_{1}a_{11} + x_{2}a_{12} + \cdots + x_{n}a_{1n} \\
+  x_{1}a_{21} + x_{2}a_{22} + \cdots + x_{n}a_{2n} \\
+  \vdots  \\
+  x_{1}a_{n1} + x_{2}a_{n2} + \cdots + x_{n}a_{nn}
+\end{bmatrix}
+\end{equation*}
+$ = (x_{1}x_{1}a_{11} + x_{1}x_{2}a_{21} + \cdots + x_{1}x_{n}a_{n1}) + (x_{1}x_{2}a_{12} + x_{2}x_{2}a_{22} + \cdots + x_{2}x_{n}a_{n2}) + \cdots + (x_{1}x_{n}a_{1n} + x_{n}x_{2}a_{2n} + \cdots + x_{n}x_{n}a_{nn})
+$
+
+$= \sum_{i=1}^n\sum_{j=1}^n x_i x_j a_{ij}$
+%%%%%%%%%% Write your solution to Problem 3b here %%%%%%%%%%%%%%%%%%%%
+
+\item[(b)] 
+Proof by contradiction:
+
+We will define a positive definite matrix $A \in \mathbb{R}^{n \times n}$ which has at least one diagonal entry, $a_{ii}$, that is less than or equal to 0. Consider the vector, $x$, of all zeros except for $x_i = 1$. From part (a) we know that $x^\top A x = \sum_{j=1}^n\sum_{k=1}^n x_j x_k a_{jk}$.  Each of the terms in this sum will be zero except the term $x_i x_i a_{ii}$, so  $x^\top A x = a_{ii} <= 0$.  This contradicts that A is a positive definite matrix, showing that every diagonal entry of a positive matrix must be positive.
+
+\end{itemize}
+
+\newpage
+
+% =============================================================
+
+\begin{question}[4: Short Proofs]
+~
+
+$A$ is symmetric in all parts.
+\begin{itemize}
+\item[(a)]
+Let $A$ be a positive semidefinite matrix. Show that $A + \gamma I$ is positive
+definite for any $\gamma > 0$.
+\item[(b)]
+Let $A$ be a positive definite matrix. Prove that all eigenvalues of $A$ are greater than zero.
+\item[(c)]
+Let $A$ be a positive definite matrix. Prove that $A$ is invertible. (Hint: Use the previous part.)
+\item[(d)]
+Let $A$ be a positive definite matrix. Prove that there exist $n$ linearly independent vectors $x_{1}, x_{2}, ..., x_{n}$
+such that $A_{ij} = x_{i}^{\top}x_{j}$. (Hint: Use the
+\href{https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html}{\underline{spectral
+    theorem}} and what you proved in (b) to find a matrix $B$ such that $A = B^{\top}B$.)
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+\begin{itemize}
+\item[(a)]
+We wish to show that $ x^{\top}(A + \gamma I)x > 0$.  
+
+$x^{\top}(A + \gamma I)x = x^{\top}A x + \gamma x^{\top} I x = x^{\top}A x + \gamma x^{\top}x$
+
+We know that $ x^{\top}A x$ is positive, so we just need to show that $\gamma x^{\top} x$ is positive as well.
+
+$ \gamma x^{\top}x = \gamma\sum_{i = 1}^n x_{i}^2$
+
+$\gamma\sum_{i = 1}^n x_{i}^2$ is greater than 0 when $x \neq \vec{0}$ and $\gamma > 0$, so $x^{\top}A x + \gamma x^{\top}x$ is greater than 0 and $A+\gamma I$ is positive definite.  
+
+\item[(b)]
+The eigenvalues $\lambda$ of a positive definite matrix $A$ are given by the equation $Ax = \lambda x$. We can multiply both sides of the equation by $x^{\top}$ to get:
+
+$x^{\top}A x = \lambda x^{\top} x$
+
+We know that $x^{\top}A x$ is positive by the definition of a positive  definite matrix. Since $x^{\top} x$ is always positive ($x^{\top} x = \sum_{i = 1}^n x_{i}^2$), we know that the eigenvalues are all positive.   
+
+\item[(c)]
+From the invertible matrix theorem, a matrix is invertible if the number 0 is not an eigenvalue of that matrix.  The invertible matrix theorem is a collection of statements that must be either all true or all false for a square matrix. From part (b) we know that all eigenvalues of $A$ are positive, so 0 is not an eigenvalue of $A$. Therefore, $A$ is invertible.
+
+\item[(d)]
+From the spectral theorem, we know that $A = U\Lambda U^{\top}$, where $U$ is a matrix with the eigenvectors of $A$ as columns, and $\Lambda$ is a diagonal matrix with the eigenvalues of $A$ as the diagonal entries. From part (b) we know that all eigenvalues of $A$ are positive, so we can express $A$ as:
+
+$ A = U\begin{bmatrix}
+  \lambda_{1} & 0 & \cdots & 0 \\
+  0 & \lambda_{2} & \cdots & 0 \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 & 0 & \cdots & \lambda_{n}
+\end{bmatrix}U^{\top}
+=
+U\begin{bmatrix}
+  \sqrt{\lambda_{1}} & 0 & \cdots & 0 \\
+  0 & \sqrt{\lambda_{2}} & \cdots & 0 \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 & 0 & \cdots & \sqrt{\lambda_{n}}
+\end{bmatrix}
+\begin{bmatrix}
+  \sqrt{\lambda_{1}} & 0 & \cdots & 0 \\
+  0 & \sqrt{\lambda_{2}} & \cdots & 0 \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 & 0 & \cdots & \sqrt{\lambda_{n}}
+\end{bmatrix}U^{\top}$
+
+$= B^{\top}B$
+
+From here, we see that vectors $b_1, b_2, ..., b_n$ exist such that $A_{ij} = b_i^{\top}b_j$. Since $A$ is symmetric, the eigenvectors of $A$ are linearly independent. Every $b_i$ is simply an eigenvector of $A$ multiplied by a scalar (the square root of $\lambda_i$), so $b_1, b_2, ..., b_n$ are linearly independent as well.
+
+
+\end{itemize}
+
+\newpage
+
+% =============================================================
+
+\begin{question}[5: Derivatives and Norm Inequalities]
+~
+
+Derive the expression for following questions. Do not write the answers directly.
+\begin{itemize}
+\item[(a)] Let $\textbf{x}, \textbf{a} \in \R^n$. Derive
+  $\frac{\partial \left(\textbf{x}^T\textbf{a}\right)}{\partial \textbf{x}}$.
+\item[(b)] Let $\textbf{A} \in \R^{n \times n}, \textbf{x} \in \R^n$.
+  Derive
+  $\frac{\partial \left(\textbf{x}^T\textbf{A}\textbf{x} \right)}{\partial
+    \textbf{x}}$.
+\item[(c)] Let $\textbf{A}, \textbf{X} \in \R^{n\times n}$. Derive
+  $\frac{\partial \text{Trace(\textbf{XA})}}{\partial \textbf{X}}$.
+\item[(d)] Let $\textbf{x}\in \R^n$. Prove that
+  $\|\textbf{x}\|_2 \leq \|\textbf{x}\|_1 \leq \sqrt{n}\|\textbf{x}\|_2$. (Note
+  that $\|\textbf{x}\|_2=\sqrt{\sum_{i=1}^{n} x_i^2}$ and
+  $\|\textbf{x}\|_1=\sum_{i=1}^{n} |x_i|$.) (Hint: The Cauchy-Schwarz inequality may come in handy.)
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+
+\begin{itemize}
+\item[(a)] 
+
+$
+\frac{\partial \left(\textbf{x}^T\textbf{a}\right)}{\partial \textbf{x}}
+=
+\frac{\partial \left(\sum_{i=1}^n x_i a_i\right)}{\partial \textbf{x}}
+=
+\begin{bmatrix}
+  \frac{\partial \left(\sum_{i=1}^n x_i a_i\right)}{\partial x_1}  &  \frac{\partial \left(\sum_{i=1}^n x_i a_i\right)}{\partial x_2}  & \cdots  &  \frac{\partial \left(\sum_{i=1}^n x_i a_i\right)}{\partial x_n}
+\end{bmatrix}^T
+= 
+\textbf{a}
+$ 
+
+
+\item[(b)] $\frac{\partial \left(\textbf{x}^T\textbf{A}\textbf{x} \right)}{\partial
+    \textbf{x}} 
+=
+\frac{\partial \left( \sum_{i=1}^n\sum_{j=1}^n A_{ij}x_i x_j \right)}{\partial
+    \textbf{x}} 
+=
+\frac{\partial}{\partial\textbf{x}}\left( \sum_{i\neq k}\sum_{j\neq k}  A_{ij}x_i x_j + \sum_{i\neq k}A_{ik}x_i x_k + \sum_{j\neq k}A_{kj}x_j x_k + A_{kk}x_k^2 \right)
+=
+\begin{bmatrix}
+	\sum_{i=1}^n A_{i1}x_{i} +  \sum_{j=1}^n A_{1j}x_{j} \\
+	\sum_{i=1}^n A_{i2}x_{i} +  \sum_{j=1}^n A_{2j}x_{j} \\
+	\vdots \\
+	\sum_{i=1}^n A_{in}x_{i} +  \sum_{j=1}^n A_{nj}x_{j}
+\end{bmatrix}
+=
+(\textbf{A}+\textbf{A}^T)\textbf{x}
+$
+
+\item[(c)] $\frac{\partial \text{Trace(\textbf{XA})}}{\partial \textbf{X}}
+=
+\frac{\partial }{\partial \textbf{X}} \left( \sum_{i=1}^n x_{1i}a_{i1} + \sum_{i=1}^n x_{2i}a_{i2} + \cdots + \sum_{i=1}^n x_{ni}a_{in}\right)
+=
+\begin{bmatrix}
+	a_{11} & a_{21} & \cdots & a_{n1} \\
+	a_{12} & a_{22} & \cdots & a_{n2} \\
+	\vdots & \vdots & \ddots & \vdots \\
+	a_{1n} & a_{2n} & \cdots & a_{nn} 
+\end{bmatrix}
+\linebreak
+= \textbf{A}^T
+$
+  
+\item[(d)] 
+Since $\|\textbf{x}\|_2$ and $\|\textbf{x}\|_1$ are never negative, proving $(\|\textbf{x}\|_2)^2 \leq (\|\textbf{x}\|_1)^2$ will prove $\|\textbf{x}\|_2 \leq \|\textbf{x}\|_1$.
+
+$(\|\textbf{x}\|_2)^2 = \sum_{i=1}^{n} x_i^2 = x_1^2 + x_2^2 + ... + x_n^2$
+
+$(\|\textbf{x}\|_1)^2 = (\sum_{i=1}^{n} |x_i|)^2 = x_1^2 + x_2^2 + ... + x_n^2 + 2|x_1||x_2| + 2|x_1||x_3|+...$
+
+From this we can see that $(\|\textbf{x}\|_2)^2 \leq (\|\textbf{x}\|_1)^2$, so $\|\textbf{x}\|_2 \leq \|\textbf{x}\|_1$.
+
+Now we must show that $\|\textbf{x}\|_1 \leq \sqrt{n}\|\textbf{x}\|_2$. The Cauchy-Schwarz inequality tells us that:
+
+$\left( \sum_{i=1}^n a_i b_i\right)^2 \leq \left( \sum_{i=1}^n a_i^2 \right) \left( \sum_{i=1}^n b_i^2 \right)$, if $a_i = c b_i$
+
+Let $a_i = 1$ and $b_i = x_i$:
+
+$\left( \sum_{i=1}^n x_i\right)^2 \leq \left( \sum_{i=1}^n 1^2 \right) \left( \sum_{i=1}^n x_i^2 \right)$
+
+$\left( \sum_{i=1}^n x_i\right)^2 \leq ( n) \left( \sum_{i=1}^n x_i^2 \right)$
+
+Taking the square root of both sides, we get:
+
+$\sum_{i=1}^n x_i \leq \sqrt{n} \sqrt{\sum_{i=1}^{n} x_i^2}$,
+
+$\|\textbf{x}\|_1 \leq \sqrt{n}\|\textbf{x}\|_2$
+
+\end{itemize}
+
+\newpage
+
+% =============================================================
+
+\begin{question}[6: Weighted Linear Regression]
+~
+
+Let \textbf{X} be a $n\times d$ data matrix, $\textbf{Y}$ be the corresponding
+$n\times 1$ target/label matrix and $\boldsymbol{\Lambda}$ be the diagonal
+$n\times n$ matrix containing a weight for each example. More explicitly, we
+have
+
+\begin{minipage}{\textwidth}
+\hfill
+$\textbf{X} = \left[ \begin{matrix} (\textbf{x}^{(1)})^T \\
+    (\textbf{x}^{(2)})^T \\ \dots \\ (\textbf{x}^{(n)})^T \end{matrix}
+\right]$
+\hfill
+$\textbf{Y} = \left[ \begin{matrix} \textbf{y}^{(1)} \\ \textbf{y}^{(2)} \\
+    \dots \\ \textbf{y}^{(n)} \end{matrix} \right]$
+\hfill
+$\boldsymbol{\Lambda} = \text{diag}(\lambda^{(1)},\lambda^{(2)},\dots,\lambda^{(n)})$
+\hspace{5em}
+\end{minipage}
+
+where $\textbf{x}^{(i)} \in \mathbb{R}^d$, $\textbf{y}^{(i)} \in \mathbb{R}$,
+and $\lambda^{(i)} > 0$
+$\;\;\forall\;\;i\in\{1\dots n\}$. \textbf{X}, \textbf{Y} and $\boldsymbol{\Lambda}$ are fixed and known.
+
+In this question, we will try to fit a weighted linear regression model for this
+data. We want to find the value of weight vector $\textbf{w}$ which best
+satisfies the following equation
+$\textbf{y}^{(i)}=\textbf{w}^T\textbf{x}^{(i)}+\epsilon^{(i)}$, where $\epsilon$
+is noise. This is achieved by minimizing the weighted noise for all the
+examples. Thus, our risk (cost) function is defined as follows:
+\begin{align*}
+  R[\textbf{w}] &= \sum_{i=1}^{n} \lambda^{(i)}(\epsilon^{(i)})^2\\
+                &= \sum_{i=1}^{n} \lambda^{(i)}(\textbf{w}^T\textbf{x}^{(i)}-\textbf{y}^{(i)})^2
+\end{align*}
+\begin{itemize}
+\item[(a)] Write this risk function $R[\textbf{w}]$ in matrix notation (i.e., in
+  terms of \textbf{X}, \textbf{Y}, $\boldsymbol{\Lambda}$ and \textbf{w}).
+\item[(b)] Find the weight vector \textbf{w} that minimizes the risk function
+  obtained in the previous part. You can assume that
+  $\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}$ is full rank. (Hint: You may use
+  the expression you derived in Question 5(b).)
+\medskip
+\item[(c)] The $L_2$ regularized risk function, for $\gamma>0$, is
+  \begin{align*}
+    R[\textbf{w}] &= \sum_{i=1}^{n} \lambda^{(i)}(\textbf{w}^T\textbf{x}^{(i)}-\textbf{y}^{(i)})^2 + \gamma \|\textbf{w}\|^2_2
+  \end{align*}
+  Rewrite this new risk function in matrix notation as in (a) and solve for
+  \textbf{w} as in (b).
+\item[(d)] How does $\gamma$ affect the regression model? How does this fit in
+  with what you already know about $L_2$ regularization? (Hint: Observe
+  the different expressions for $\textbf{w}$ obtained in (b) and (c).)
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+
+\begin{itemize}
+\item[(a)]
+$ R[\textbf{w}] = (\textbf{X}\textbf{w} - \textbf{Y})^T \boldsymbol{\Lambda}(\textbf{X}\textbf{w}-\textbf{Y})$
+
+\item[(b)] We want to find \textbf{w} such that:
+
+$0 = \frac{\partial R[\textbf{w}]}{\partial \textbf{w}}=\frac{\partial}{\partial \textbf{w}}\left((\textbf{X}\textbf{w} - \textbf{Y})^T \boldsymbol{\Lambda}(\textbf{X}\textbf{w}-\textbf{Y})\right) 
+= 
+\frac{\partial}{\partial \textbf{w}}\left(\textbf{w}^T\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - \textbf{w}^T\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} - \textbf{Y}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} + \textbf{Y}^T\boldsymbol{\Lambda}\textbf{Y}\right)
+$
+
+$
+=
+\frac{\partial}{\partial \textbf{w}}\text{tr}\left(\textbf{w}^T\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - \textbf{w}^T\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} - \textbf{Y}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} + \textbf{Y}^T\boldsymbol{\Lambda}\textbf{Y}\right)
+=
+\frac{\partial}{\partial \textbf{w}}\left(tr(\textbf{w}^T\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w})-tr(2\textbf{Y}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w})\right)
+$
+
+$
+=
+2\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - 2\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y}
+$
+
+Solving for \textbf{w}, using the fact that $\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}$ is invertible:
+
+$0 = \frac{\partial R[\textbf{w}]}{\partial \textbf{w}}
+= 2\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - 2\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y}
+\rightarrow\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} = \textbf{X}^T\boldsymbol{\Lambda}\textbf{Y}
+$
+
+$\textbf{w} = (\textbf{X}^T\boldsymbol{\Lambda}\textbf{X})^{-1}  \textbf{X}^T\boldsymbol{\Lambda}\textbf{Y}$
+
+\item[(c)] 
+
+$ R[\textbf{w}] = (\textbf{X}\textbf{w} - \textbf{Y})^T \boldsymbol{\Lambda}(\textbf{X}\textbf{w}-\textbf{Y}) + \gamma\textbf{w}^T\textbf{w}$
+
+$\frac{\partial R[\textbf{w}]}{\partial \textbf{w}} = \frac{\partial }{\partial \textbf{w}}((\textbf{X}\textbf{w} - \textbf{Y})^T \boldsymbol{\Lambda}(\textbf{X}\textbf{w}-\textbf{Y})) + \frac{\partial }{\partial \textbf{w}}(\gamma\textbf{w}^T\textbf{w})
+= 
+2\textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - 2\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} + 2\gamma\textbf{w}
+$
+
+Setting $\frac{\partial R[\textbf{w}]}{\partial \textbf{w}}$ to 0 and solving for \textbf{w}:
+
+$
+0 = \textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} - \textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} + \gamma\textbf{w}
+$
+
+$
+0 = - \textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} + \textbf{X}^T\boldsymbol{\Lambda}\textbf{X}\textbf{w} + \gamma\textbf{I}\textbf{w}
+$
+
+$
+0 = - \textbf{X}^T\boldsymbol{\Lambda}\textbf{Y} + (\textbf{X}^T\boldsymbol{\Lambda}\textbf{X} + \gamma\textbf{I})\textbf{w}
+$
+
+$
+\textbf{w} = (\textbf{X}^T\boldsymbol{\Lambda}\textbf{X} + \gamma\textbf{I})^{-1}\textbf{X}^T\boldsymbol{\Lambda}\textbf{Y}
+$
+
+\item[(d)]
+Increasing $\gamma$ increases the penalty the regression model places on large weight values. By adding the $L_2$ norm to the risk function, our weights will be pulled closer to zero. This can be useful in preventing overfitting. 
+
+\end{itemize}
+
+\newpage
+
+% =============================================================
+
+\begin{question}[7: Classification]
+~
+
+Suppose we have a classification problem with classes labeled $1, \dotsc, c$ and
+an additional doubt category labeled as $c+1$. Let the loss function be the
+following:\\
+\[
+\ell(f(x) = i, y = j) =
+  \begin{cases}
+   0 &  \mathrm{if}\ i=j \quad i,j\in\{1,\dotsc,c\} \\
+   \lambda_r       & \mathrm{if}\ i=c+1 \\
+   \lambda_s       & \text{otherwise}
+  \end{cases}
+\]
+where $\lambda_r$ is the loss incurred for choosing doubt and $\lambda_s$ is the
+loss incurred for making a misclassification. Note that $\lambda_r \ge 0$ and
+$\lambda_s \ge 0$.
+
+Hint: The risk of classifying a new datapoint as class $i\in\{1,2,\dots,c+1\}$
+is $$R(\alpha_i|x) = \sum_{j=1}^{c} \ell(f(x) = i, y = j) P(\omega_j|x)$$
+
+\begin{itemize}
+\item[(a)] Show that the minimum risk is obtained if we follow this policy: (1)
+  choose class~$i$ if $P(\omega_i|x) \geq P(\omega_j|x)$ for all $j$ and
+  $P(\omega_i|x) \geq 1-\lambda_r/\lambda_s$, and (2) choose doubt otherwise.
+\item[(b)] What happens if $\lambda_r=0$? What happens if $\lambda_r>\lambda_s$? Is this consistent with your intuition?
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+
+
+\begin{itemize}
+\item[(a)] 
+  
+If we choose to categorize the datapoint as doubt:
+
+$R(\alpha_{c+1} | x) = \sum_{j=1}^c \lambda_r P(\omega_j |x) = \lambda_r$
+
+If we choose to categorize the datapoint as i:
+
+$R(\alpha_i | x) = \left( \sum_{j=1}^c \lambda_s P(\omega_j |x) \right) - \lambda_s P(\omega_i|x) = \lambda_s (1 - P(\omega_i|x))$
+
+Therefore, choosing class $i$ will minimize risk when:
+
+$R(\alpha_i | x) \leq R(\alpha_{c+1} | x) \rightarrow \lambda_s (1 - P(\omega_i|x)) \leq \lambda_r \rightarrow P(\omega_i|x) \geq 1-\lambda_r/\lambda_s$
+
+Additionally, in order to minimize risk when we choose not to categorize as doubt, we must choose the class i that has the highest $P(\omega_i|x)$:
+
+$R(\alpha_i | x) \leq R(\alpha_{j} | x) \rightarrow \lambda_s (1 - P(\omega_i|x)) \leq \lambda_s (1 - P(\omega_j|x)) \rightarrow P(\omega_i|x) \geq P(\omega_j|x)$
+
+
+\item[(b)] When $\lambda_r=0$, $R(\alpha_{c+1}|x) = 0$ and it will always be optimal to choose to categorize as doubt. Intuitively this makes sense, because if there is no loss associated with categorizing as doubt, then we can minimize our loss by always choosing to classify as doubt.
+
+When $\lambda_r>\lambda_s$:
+
+$\lambda_s (1 - P(\omega_i|x)) \leq \lambda_s < \lambda_r$ 
+
+$R(\alpha_i | x) < R(\alpha_{c+1}|x)$
+
+So if $\lambda_r>\lambda_s$, then it will never be optimal to choose to categorize as doubt.  If the penalty for categorizing as doubt is higher than the penalty for making a misclassifaction, it makes sense intuitively that it is always better to try to classify the dataset as not doubt.
+
+
+
+
+%What happens if $\lambda_r=0$? What happens if $\lambda_r>\lambda_s$? Is this consistent with your intuition?
+
+\end{itemize}
+
+\newpage
+
+% =============================================================
+\begin{question}[8: Gaussians]
+~
+
+Let $P(x \mid \omega_i) \sim \mathcal{N}(\mu_i,\sigma^2)$ for a two-category, one-dimensional classification problem with $P(\omega_1)=P(\omega_2)=1/2$. Here, the classes are $\omega_{1}$ and $\omega_{2}$. For this problem, we have $\mu_{2} \geq \mu_{1}$.
+\begin{itemize}
+\item[(a)] Find the optimal Bayes decision boundary (i.e., find $x$ such that $P(\omega_{1} \mid x) = P(\omega_{2} \mid x)$). What is the corresponding decision rule?
+\item[(b)] Show that the Bayes error associated with this decision rule is
+\begin{equation*}
+P_e=\frac{1}{\sqrt{2\pi}}\int_{a}^{\infty} e^{-z^{2}/2}dz
+\end{equation*}
+where $a=\dfrac{\mu_2 - \mu_1}{2\sigma}$. The Bayes error is the probability of misclassification: $$P_{e} = P((\text{misclassified as }\omega_{1}) \mid \omega_{2}) P(\omega_{2}) + P((\text{misclassified as }\omega_{2}) \mid \omega_{1}) P(\omega_{1}).$$
+\end{itemize}
+\end{question}
+\textbf{Solution:}
+\begin{itemize}
+\item[(a)]
+
+Using Bayes' theorem, we get that:
+\begin{equation*}P(\omega_{1} \mid x) = \frac{P(x \mid \omega_{1})P(\omega_{1})}{P(x)} = \frac{P(x \mid \omega_{1})}{2P(x)}
+\end{equation*}
+\begin{equation*}P(\omega_{2} \mid x) = \frac{P(x \mid \omega_{2})P(\omega_{2})}{P(x)} = \frac{P(x \mid \omega_{2})}{2P(x)}
+\end{equation*}
+
+Setting the two equal to each other, we see that the optimal Bayes decision boundary occurs when $P(x \mid \omega_{1}) = P(x \mid \omega_{2})$. This occurs right between the peaks of the two distributions, so the optimal Bayes decision boundary is at $x=\dfrac{\mu_2 + \mu_1}{2}$.  The corresponding decision rule is to classify as $\omega_1$ if the unknown point is left of $x=\dfrac{\mu_2 + \mu_1}{2}$, and to classify as $\omega_2$ otherwise.
+
+\item[(b)] The probability of misclassification will be the overlapping area between the two Gaussian curves after accounting for the prior. Both $P((\text{misclassified as }\omega_{1}) \mid \omega_{2})$ and $P((\text{misclassified as }\omega_{2}) \mid \omega_{1})$ can be found using z-scores for the optimal Bayes decision boundary, $x = \dfrac{\mu_2 - \mu_1}{2}$.  Because of the symmetry of the problem, $P((\text{misclassified as }\omega_{1}) \mid \omega_{2})$ = $P((\text{misclassified as }\omega_{2}) \mid \omega_{1}) = P_e$.  Using the z-score we are able to obtain the value for $a$ in the integral lower bound.
+
+$z = \dfrac{\dfrac{\mu_2 + \mu_1}{2} - \mu_1}{\sigma} = \dfrac{\mu_2 - \mu_1}{2\sigma}$
+
+\end{itemize}
+\end{document}
+
