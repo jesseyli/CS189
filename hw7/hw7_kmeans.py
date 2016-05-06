@@ -55,7 +55,7 @@ def kmeans(k):
 	print(loss)
 	return mu
 
-k_list = [5,10,20]
+k_list = [5]#,10,20]
 for i,k in enumerate(k_list):
 	mu = kmeans(k)
 	# for mean in mu:
