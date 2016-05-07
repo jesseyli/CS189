@@ -8,7 +8,6 @@ train = scipy.io.loadmat('data/mnist_data/images.mat')
 train_images= train["images"]
 train_images = np.float64(train_images.reshape(-1, train_images.shape[-1])).T
 np.random.shuffle(train_images)
-# train_images = train_images[:1000]
 
 def montage_images(images):
     num_images=min(1000,np.size(images,2))
@@ -55,10 +54,10 @@ def kmeans(k):
 	print(loss)
 	return mu
 
-k_list = [5]#,10,20]
+k_list = [5,10,20]
 for i,k in enumerate(k_list):
 	mu = kmeans(k)
-	# for mean in mu:
-	# 	img = montage_images(mean.reshape(28,28,1))
-	# 	plt.imshow(img)
-	# 	plt.show()
+	for mean in mu:
+		img = montage_images(mean.reshape(28,28,1))
+		plt.imshow(img)
+		plt.show()
